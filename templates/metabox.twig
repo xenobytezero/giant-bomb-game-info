@@ -1,0 +1,46 @@
+<div id="gbgi-metabox">
+
+{% if not apiKey %}
+
+    <h3>The GB API key has not been set.</h3>
+    <p>Go to the <a href="{{admin_url}}">GB Game Info Widget Settings</a> page to enter your API key, and for details where to get it</p>
+
+{% else %}
+
+    <label>
+
+        <p>{{gameData.name}}</p>
+
+        <input
+            type='hidden'
+            class='api-key'
+            value='{{apiKey}}'
+        />
+
+        <input
+            name='gbgi-game-id'
+            type='hidden'
+            class='gbgi-game-id'
+            value='{{gbgi-game-id}}'
+        />
+        
+    </label>
+    
+    <hr/>
+    
+    <label>
+        <input type='text' class='search-query'/>
+        <input type='button' class='do-search' class='button' value='Search'></button>
+    </label>
+    
+    <div class='loading'>
+        <i class='fa-gbinfo fa-gbinfo-cog fa-gbinfo-spin fa-gbinfo-3x'></i>
+    </div>
+    
+    <div class='results'>
+        <ul class='results'></ul>
+    </div>
+
+{% endif %}
+
+</div>

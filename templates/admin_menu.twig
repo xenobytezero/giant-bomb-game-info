@@ -1,0 +1,38 @@
+<h1>GB Game Info Widget</h1>
+
+<p>Find your API key at <a href='http://www.giantbomb.com/api/'>http://www.giantbomb.com/api/</a></p>
+<p>This requires a Giant Bomb account</p>
+
+<form method="post" action="options.php">
+    
+    {{ function('settings_fields', option_group) }}
+    
+    {% if options.apiKey %}
+
+        <h3>API Key Set</h3>
+
+        {{ function('submit_button', 'Reset API Key', 'primary', 'reset') }}
+
+    {% else %}
+
+        <table class="form-table">
+                
+            <tr valign="top">
+                <th scope="row">Giant Bomb API Key</th>
+                <td>
+                    <input
+                        style="width:50%"
+                        type="text"
+                        name="{{option_name}}[apiKey]"
+                        value="{{options.apiKey}}"
+                    />
+                </td>
+            </tr>
+        
+        </table>
+
+        {{ function('submit_button', 'Save') }}
+
+    {% endif %}
+
+</form>
