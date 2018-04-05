@@ -1,0 +1,45 @@
+.wp-block-gbgi-gbgi-block {
+
+    .display-area {
+
+        display: grid;
+
+        grid-template-columns: 50% 50%;
+        grid-template-areas: 'title image'
+            'platforms image';
+
+        img {
+            grid-area: image;
+            
+            max-height: 150px;
+
+            align-self: center;
+            justify-self: end;
+        }
+
+        h3 {
+            grid-area: title;
+        }
+
+        p {
+            grid-area: platforms
+        }
+
+    }
+
+    .search-area {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        input {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+    }
+
+
+    
+}

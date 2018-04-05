@@ -36,105 +36,21 @@ add_action(
 
 class GiantBombGameInfoCommon {
 
-    public static $OPTION_GROUP = 'gbgi';
-    public static $OPTION_NAME = 'gbgi_opts';
 
-    private static $OPTION_KEY = "qKUV6yWH2/e/4ofwQNvoE6oSYV+UN3l76wuXhdh22qM=";
-
-    public static function register_resources() {
-
-        wp_register_script(
-            'gbgi_core',
-            plugins_url('/js/gbgi_core.js', __FILE__)
-        );
-
-    }
-
-    public static function register_settings() {
-        register_setting(
-            GiantBombGameInfoCommon::$OPTION_GROUP, 
-            GiantBombGameInfoCommon::$OPTION_NAME,
-            'GiantBombGameInfoCommon::save_option_callback'
-        );
-    }
-
-    public static function save_option_callback($input) {
-
-        if (isset($_POST['reset'])) {
-            $input['apiKey'] = "";
-            add_settings_error(
-                'gbgi', 
-                'api-reset', 
-                'The API Key was reset', 
-                'updated' 
-            );
-        } else {
-            $input['apiKey'] = GiantBombGameInfoCommon::enc($input['apiKey']);
-        }
-
-        return $input;
-    }
-
-    public static function get_api_key() {
-        $options = get_option(GiantBombGameInfoCommon::$OPTION_NAME);
-        $api_key = GiantBombGameInfoCommon::dec($options['apiKey']);
-        return $api_key;
-    }
-
-    public static function enc($data){
-        // Remove the base64 encoding from our key
-        $encryption_key = base64_decode(GiantBombGameInfoCommon::$OPTION_KEY);
-        // Generate an initialization vector
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        // Encrypt the data using AES 256 encryption in CBC mode using our encryption key and initialization vector.
-        $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
-        // The $iv is just as important as the key for decrypting, so save it with our encrypted data using a unique separator (::)
-        return base64_encode($encrypted . '::' . $iv);
-    }
-
-    public static function dec($data){
-        // Remove the base64 encoding from our key
-        $encryption_key = base64_decode(GiantBombGameInfoCommon::$OPTION_KEY);
-        // To decrypt, split the encrypted data from our IV - our unique separator used was "::"
-        list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
-        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-    }
 
 }
 
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
 
-class GiantBombGameInfoAdminMenu {
 
-    public static function register_admin_menu() {
-        add_options_page(
-            'Giant Bomb Game Info',
-            'Giant Bomb Game Info',
-            'manage_options',
-            'giant-bomb-game-info',
-            'GiantBombGameInfoAdminMenu::create_admin_menu'
-        );
-    }
-
-    public static function create_admin_menu() {
-
-        $context = [
-            'option_group' => GiantBombGameInfoCommon::$OPTION_GROUP,
-            'option_name' => GiantBombGameInfoCommon::$OPTION_NAME,
-            'options' => get_option(GiantBombGameInfoCommon::$OPTION_NAME)
-        ];
-
-        Timber::render('templates/admin_menu.twig', $context);
-    }
-
-}
 
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
 
 class GiantBombGameInfoMetaBox {
 
+    private static $gbgi_metabox_nonce_name = 'gbgi-metabox-nonce';
 
     public static function register_resources(){
 
@@ -170,6 +86,7 @@ class GiantBombGameInfoMetaBox {
 
         wp_enqueue_script('gbgi_core');
         wp_enqueue_script('gbgi_admin_metabox');
+        wp_enqueue_style( 'gbgi_metabox');
 
         $apiKey = GiantBombGameInfoCommon::get_api_key();
 
@@ -177,8 +94,52 @@ class GiantBombGameInfoMetaBox {
             'apiKey' => $apiKey
         ];
 
+        echo '<!-- GBGI Meta Box -->';
+
         Timber::render('templates/metabox.twig', $context);
 
+    }
+
+    public static function save_data() {
+
+        /* Verify the nonce before proceeding. */
+        if ( 
+            !isset( $_POST['smashing_post_class_nonce'] ) || 
+            !wp_verify_nonce( $_POST['smashing_post_class_nonce'], basename( __FILE__ ) ) 
+        ){
+            return $post_id;
+        }
+        
+        /* Get the post type object. */
+        $post_type = get_post_type_object( $post->post_type );
+
+        /* Check if the current user has permission to edit the post. */
+        if ( !current_user_can( $post_type->cap->edit_post, $post_id ) )
+        return $post_id;
+
+        /* Get the posted data and sanitize it for use as an HTML class. */
+        $new_meta_value = ( isset( $_POST['smashing-post-class'] ) ? sanitize_html_class( $_POST['smashing-post-class'] ) : '' );
+
+        /* Get the meta key. */
+        $meta_key = 'smashing_post_class';
+
+        /* Get the meta value of the custom field key. */
+        $meta_value = get_post_meta( $post_id, $meta_key, true );
+
+        /* If a new meta value was added and there was no previous value, add it. */
+        if ( $new_meta_value && '' == $meta_value ){
+            add_post_meta( $post_id, $meta_key, $new_meta_value, true );
+        }
+
+        /* If the new meta value does not match the old value, update it. */
+        elseif ( $new_meta_value && $new_meta_value != $meta_value ) {
+            update_post_meta( $post_id, $meta_key, $new_meta_value );
+        }
+        
+        /* If there is no new meta value but an old value exists, delete it. */
+        elseif ( '' == $new_meta_value && $meta_value ) {
+            delete_post_meta( $post_id, $meta_key, $meta_value );
+        }
     }
 
 }
