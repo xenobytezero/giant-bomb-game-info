@@ -1,5 +1,13 @@
 .wp-block-gbgi-gbgi-block {
 
+    .searching {
+        text-align: center;
+    }
+
+    .components-placeholder {
+        min-height: 125px;
+    }
+
     .display-area {
 
         display: grid;
@@ -35,9 +43,15 @@
 
         input {
             flex: 1;
-            margin-right: 20px;
+            margin-right: 5px;
         }
 
+    }
+
+    .results {
+        a {
+            cursor: pointer;
+        }
     }
 
 

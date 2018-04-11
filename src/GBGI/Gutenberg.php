@@ -31,10 +31,17 @@ class Gutenberg {
         register_block_type( 
             'gbgi/gbgi-block', [
                 'editor_script' => 'gbgi-gutenberg-block',
-                'editor_style' => 'gbgi-gutenberg-editor-style'
+                'editor_style' => 'gbgi-gutenberg-editor-style',
+                'render_callback' => '\GBGI\Gutenberg::render_block'
             ]
         );
 
+    }
+
+    public static function render_block($attrs){
+
+        $output = "<p>" . var_export($attrs, TRUE) . "</p>";
+        return $output;
     }
 
 
