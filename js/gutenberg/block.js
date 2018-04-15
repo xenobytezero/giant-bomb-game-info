@@ -1,10 +1,10 @@
 const { registerBlockType, InspectorControls, BlockControls } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { withAPIData, PanelBody, CheckboxControl } = wp.components;
+const { withAPIData, PanelBody, CheckboxControl, SelectControl } = wp.components;
 const { Component } = wp.element;
 
 import * as GBGICore from '../gbgi_core.js';
 
-//import './style.scss';
+import './style.scss';
 import './style-editor.scss';
 
 class Edit extends Component {
@@ -59,8 +59,12 @@ class Edit extends Component {
     }
 
     onSearchResultClicked(resultObj) {
+
+        let json = JSON.stringify(resultObj)
+
         this.props.setAttributes({ 
-            gameInfo: JSON.stringify(resultObj)
+            gameInfo: json,
+            gameInfoJson: json
         });
 
         this.setState({
@@ -71,7 +75,8 @@ class Edit extends Component {
 
     onRemoveClicked() {
         this.props.setAttributes({ 
-            gameInfo: ''
+            gameInfo: '',
+            gameInfoJson: ''
         });
     }
 
@@ -81,7 +86,7 @@ class Edit extends Component {
 
     render() {
 
-        const {attributes, className, setAttributes, apiKey, isSelected} = this.props;
+        const {attributes, className, setAttributes, apiKey, customTemplate, isSelected} = this.props;
 
         let gameInfoObj = null;
 
@@ -133,22 +138,34 @@ class Edit extends Component {
                         checked={attributes.disableRender} 
                         onChange={(val) => setAttributes({disableRender: val})} 
                     />
+                    {(customTemplate.isLoading && <p>Loading...</p>)}
+                    {(!customTemplate.isLoading &&
+                    <SelectControl
+                        label={'Custom Template'}
+                        value={attributes.customTemplate}
+                        options={customTemplate.data.map((t) => {
+                            return {label: t.name, value:t.path}
+                        })}
+                        onChange={(val) => setAttributes({customTemplate: val})}
+                    />
+                    )}
+
                 </PanelBody>
 
 
             </InspectorControls>),
 
-            <div className={className}>
+            <div class="editor" className={className + ' editor'}>
 
                 {gameInfoObj == null && <div class="components-placeholder">
                     <h3 class="components-placeholder__label">No Game Selected.</h3>
                 </div>
                 }
 
-                {gameInfoObj != null && <div class="display-area">
-                    <img src={gameInfoObj.imageUrl}/>
-                    <h3>{gameInfoObj.title}</h3>
-                    <p>{this.convertPlatformsToString(gameInfoObj.platforms)}</p>
+                {gameInfoObj != null && <div class="default-block">
+                    <img class="image" src={gameInfoObj.imageUrl}/>
+                    <h3 class="title">{gameInfoObj.title}</h3>
+                    <p class="platforms">{this.convertPlatformsToString(gameInfoObj.platforms)}</p>
                 </div>}
 
             </div>
@@ -171,14 +188,24 @@ registerBlockType('gbgi/gbgi-block', {
             source: 'meta',
             meta: 'gbgi-gameinfo'
         },
+        gameInfoJson: {
+            type: 'string',
+            default: ''
+        },
         disableRender: {
-            type: 'boolean'
+            type: 'boolean',
+            default: false
+        },
+        customTemplate: {
+            type: 'string',
+            default: ''
         }
     },
 
     edit: withAPIData(() => {
         return {
-            apiKey: '/gbgi/v1/apiKey'
+            apiKey: '/gbgi/v1/apiKey',
+            customTemplate: '/gbgi/v1/templates'
         }
     })(Edit),
 

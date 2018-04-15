@@ -1,0 +1,14 @@
+<div class="wp-block-gbgi-gbgi-block">
+<div class="default-block">
+    <img class="image" src="{{game_info.imageUrl}}"/>
+    <h3 class="title">{{game_info.title}}</h3>
+    <ul class="platforms">
+    {% for platform in game_info.platforms %}
+        <li class="platform">{{platform}}</li>
+    {% endfor %}
+    </ul>
+    <a class="powered-by" href="http://www.giantbomb.com">
+        <span>Powered by Giant Bomb</span>
+        <img src="{{gb_icon_path}}">
+    </a>
+</div>

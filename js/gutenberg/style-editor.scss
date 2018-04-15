@@ -1,59 +1,34 @@
 .wp-block-gbgi-gbgi-block {
 
-    .searching {
-        text-align: center;
-    }
+    &.editor {
 
-    .components-placeholder {
-        min-height: 125px;
-    }
-
-    .display-area {
-
-        display: grid;
-
-        grid-template-columns: 50% 50%;
-        grid-template-areas: 'title image'
-            'platforms image';
-
-        img {
-            grid-area: image;
-            
-            max-height: 150px;
-
-            align-self: center;
-            justify-self: end;
+        .searching {
+            text-align: center;
         }
-
-        h3 {
-            grid-area: title;
-        }
-
-        p {
-            grid-area: platforms
-        }
-
-    }
-
-    .search-area {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-
-        input {
-            flex: 1;
-            margin-right: 5px;
-        }
-
-    }
-
-    .results {
-        a {
-            cursor: pointer;
-        }
-    }
-
-
     
+        .components-placeholder {
+            min-height: 125px;
+        }
+    
+        .search-area {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+    
+            input {
+                flex: 1;
+                margin-right: 5px;
+            }
+    
+        }
+    
+        .results {
+            a {
+                cursor: pointer;
+            }
+        }
+
+    }
+
 }

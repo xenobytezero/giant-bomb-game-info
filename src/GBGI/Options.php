@@ -17,7 +17,7 @@ class Options {
             'Giant Bomb Game Info',
             'manage_options',
             'giant-bomb-game-info',
-            'GBGIOptions::create_admin_menu'
+            ['GBGI\Options', 'create_admin_menu']
         );
     }
 
@@ -29,7 +29,7 @@ class Options {
             'options' => get_option(Common::$OPTION_NAME)
         ];
 
-        Timber::render('templates/admin_menu.twig', $context);
+        \Timber::render('@gbgi/admin_menu.twig', $context);
     }
 
 }
