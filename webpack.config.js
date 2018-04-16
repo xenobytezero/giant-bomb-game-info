@@ -9,12 +9,12 @@ let extractTextPlugin_EditorStyle = new ExtractTextPlugin('[name]/style-editor.c
 module.exports = {
 
 	entry: {
-		//'plugin': path.resolve(__dirname, 'js/gutenberg/plugin.js')
-		'block': path.resolve(__dirname, 'js/gutenberg/block.js')
+		'block': path.resolve(__dirname, 'js/gutenberg/block.js'),
+		'options': path.resolve(__dirname, 'js/options.js')
     },
 	output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist/gutenberg/'),
+        filename: '[name].dist.js',
+        path: path.resolve(__dirname, 'dist/'),
     },
 	module: {
 		rules: [

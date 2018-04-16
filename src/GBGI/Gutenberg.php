@@ -15,7 +15,7 @@ class Gutenberg {
 
         wp_register_script(
             'gbgi-gutenberg-block',
-            Common::plugin_url('/dist/gutenberg/block.js'),
+            Common::plugin_url('dist/block.dist.js'),
             [
                 'wp-blocks', 
                 'wp-element',
@@ -25,12 +25,12 @@ class Gutenberg {
 
         wp_register_style(
             'gbgi-gutenberg-style',
-            Common::plugin_url('/dist/gutenberg/block/style.css')
+            Common::plugin_url('dist/block/style.css')
         );
 
         wp_register_style(
             'gbgi-gutenberg-editor-style',
-            Common::plugin_url('/dist/gutenberg/block/style.css')
+            Common::plugin_url('dist/block/style.css')
         );
 
         register_block_type( 

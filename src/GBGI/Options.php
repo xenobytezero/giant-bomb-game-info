@@ -1,6 +1,8 @@
 <?php
 
 namespace GBGI;
+// -----------------------------------------------------------------
+
 require_gbgi_autoloader();
 
 // -----------------------------------------------------------------
@@ -23,10 +25,18 @@ class Options {
 
     public static function create_admin_menu() {
 
+        wp_enqueue_script('gbgi_options_page');
+        
+        $opts = get_option(Common::$OPTION_NAME);
+
+        $apiKey = $opts['apiKey'] != '' ?
+            Common::dec($opts['apiKey']) :
+            null;
+
         $context = [
             'option_group' => Common::$OPTION_GROUP,
             'option_name' => Common::$OPTION_NAME,
-            'options' => get_option(Common::$OPTION_NAME)
+            'api_key' => $apiKey
         ];
 
         \Timber::render('@gbgi/admin_menu.twig', $context);

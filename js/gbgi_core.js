@@ -1,4 +1,3 @@
-
 let _url = 'https://www.giantbomb.com/api/'
 let _gameTypeId = '3030';
 
@@ -17,7 +16,7 @@ function searchForGame(apiKey, gameQuery){
         jsonp: 'json_callback',
         crossOrigin: true
     });
-    
+
 }
 
 function apiResultToDataObj(apiResult) {

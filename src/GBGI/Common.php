@@ -15,9 +15,47 @@ class Common {
     public static $OPTION_NAME = 'gbgi_opts';
     public static $META_KEY = 'gbgi-gameinfo';
 
-    private static $OPTION_KEY = "qKUV6yWH2/e/4ofwQNvoE6oSYV+UN3l76wuXhdh22qM=";
+    private static $ENC_FILE_NAME = "enc_key.php";
     private static $PLUGIN_BASE_DIR_CACHE = null;
     private static $PLUGIN_BASE_URL_CACHE = null;
+
+
+    public static function register_scripts() {
+        
+        wp_register_script(
+            'gbgi_options_page',
+            Common::plugin_url('dist/options.dist.js') 
+        );
+    }
+
+    public static function create_encryption_key() {
+
+        $path = Common::plugin_file(Common::$ENC_FILE_NAME);
+
+        //create the file
+        $enc_file = fopen($path, "w") or die("Unable to create enc file");
+
+        // write the header
+        fwrite($enc_file, "<?php defined( 'ABSPATH' ) or die;");
+    
+        // write the key
+        $key = base64_encode(openssl_random_pseudo_bytes(32));
+        fwrite($enc_file, "define('GBGI_ENC_KEY', '" . $key . "');");
+
+        // write the footer
+        fwrite($enc_file, "?>");
+
+        // close the file
+        fclose($enc_file);
+
+    }
+
+    public static function init_encryption_key() {
+        // get the encryption file path
+        $path = Common::plugin_file(Common::$ENC_FILE_NAME);
+        // include the enc file
+        require_once($path);
+    }
 
     private static function update_base_dir_cache() {
         if (Common::$PLUGIN_BASE_DIR_CACHE == null){
@@ -28,7 +66,7 @@ class Common {
     private static function update_base_url_cache() {
         if (Common::$PLUGIN_BASE_URL_CACHE == null){
             Common::$PLUGIN_BASE_URL_CACHE = 
-                plugin_dir_url(__DIR__ . "/../../../");
+                plugin_dir_url(__DIR__ . "/../../..");
         }
     }
 
@@ -39,7 +77,7 @@ class Common {
 
     public static function plugin_file($file = '') {
         Common::update_base_dir_cache();
-        return realpath(Common::$PLUGIN_BASE_DIR_CACHE . $file);        
+        return Common::$PLUGIN_BASE_DIR_CACHE . "/" . $file;        
 
     }
 
@@ -59,20 +97,25 @@ class Common {
         register_setting(
             Common::$OPTION_GROUP, 
             Common::$OPTION_NAME,
-            'Common::save_option_callback'
+            [
+                'sanitize_callback' => ['GBGI\Common', 'save_option_callback']
+            ]
         );
     }
 
     public static function save_option_callback($input) {
 
         if (isset($_POST['reset'])) {
+
             $input['apiKey'] = "";
+
             add_settings_error(
                 'gbgi', 
                 'api-reset', 
                 'The API Key was reset', 
                 'updated' 
             );
+
         } else {
             $input['apiKey'] = Common::enc($input['apiKey']);
         }
@@ -87,8 +130,11 @@ class Common {
     }
 
     public static function enc($data){
+        
+        // Initialise the key if required
+        Common::init_encryption_key();
         // Remove the base64 encoding from our key
-        $encryption_key = base64_decode(Common::$OPTION_KEY);
+        $encryption_key = base64_decode(GBGI_ENC_KEY);
         // Generate an initialization vector
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
         // Encrypt the data using AES 256 encryption in CBC mode using our encryption key and initialization vector.
@@ -98,8 +144,11 @@ class Common {
     }
 
     public static function dec($data){
+
+        // Initialise the key if required
+        Common::init_encryption_key();
         // Remove the base64 encoding from our key
-        $encryption_key = base64_decode(Common::$OPTION_KEY);
+        $encryption_key = base64_decode(GBGI_ENC_KEY);
         // To decrypt, split the encrypted data from our IV - our unique separator used was "::"
         list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
         return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
