@@ -24,7 +24,7 @@ class Common {
         
         wp_register_script(
             'gbgi_options_page',
-            Common::plugin_url('dist/options.dist.js') 
+            Common::plugin_url('dist/js/options.js') 
         );
     }
 

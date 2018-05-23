@@ -1,3 +1,7 @@
 node_modules/
 dist/
 enc_key\.php
+
+\.yalc/
+
+yalc\.lock

@@ -2,10 +2,7 @@ const { registerBlockType, InspectorControls, BlockControls } = wp.blocks; // Im
 const { withAPIData, PanelBody, CheckboxControl, SelectControl } = wp.components;
 const { Component } = wp.element;
 
-import * as GBGICore from '../gbgi_core.js';
-
-import './style.scss';
-import './style-editor.scss';
+import * as GBGICore from '../../js/gbgi_core.js';
 
 class Edit extends Component {
 

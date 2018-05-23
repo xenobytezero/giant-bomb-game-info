@@ -8,7 +8,7 @@ function searchForGame(apiKey, gameQuery){
         data: {
             api_key: apiKey,
             format: 'jsonp',
-            field_list: 'name,image,platforms,site_detail_url',
+            field_list: 'name,image,platforms,site_detail_url,deck',
             query: '"' + gameQuery + '"',
             resources: 'game'
         },
@@ -26,7 +26,8 @@ function apiResultToDataObj(apiResult) {
     return {
         title: apiResult.name,
         imageUrl: apiResult.image.small_url,
-        platforms: platforms
+        platforms: platforms,
+        description: apiResult.deck
     }
 
 }

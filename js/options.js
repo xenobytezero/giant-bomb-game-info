@@ -1,5 +1,5 @@
-import * as fetchJSONP from '../node_modules/fetch-jsonp/build/fetch-jsonp';
-import qs from '../node_modules/qs/dist/qs'
+import fetchJSONP from 'fetch-jsonp/build/fetch-jsonp';
+import qs from 'qs/lib/index';
 
 class OptionsHelper {
 
