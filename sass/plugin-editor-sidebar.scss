@@ -1,0 +1,43 @@
+.gbgi-sidebar {
+
+    button.fullwidth {
+        width: 100%;
+    }
+
+    .pholder {
+        color: rgb(152, 150, 150);
+        margin: 40px;
+        text-align: center;
+    }
+
+    .search-area {
+
+        .controls {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+
+            .search-input {
+                flex: 1
+            }
+
+        }
+
+        .loading-spinner {
+            width: 100%;
+            margin: 20px 0 5px 0;
+            text-align: center;
+        }
+
+        .results {
+            li {
+                cursor: pointer;
+            }
+        }
+
+    }
+
+
+
+}

@@ -1,7 +1,9 @@
-node_modules/
+.yalc/
+yalc.lock
 dist/
+node_modules/
+vendor/
+deploy/ 
+
+yarn-error\.log
 enc_key\.php
-
-\.yalc/
-
-yalc\.lock

@@ -1,0 +1,39 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "a62c70db1d46996f3d687384d3ca06cc",
+    "packages": [
+        {
+            "name": "xenobytezero/widget-support",
+            "version": "9999999-dev",
+            "dist": {
+                "type": "path",
+                "url": "./../widget-support",
+                "reference": "a36e68c7fe535c06ff3834ae19de7d2a5dc542f9",
+                "shasum": null
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WidgetSupport\\": "src/"
+                }
+            },
+            "transport-options": {
+                "symlink": true
+            }
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "xenobytezero/widget-support": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

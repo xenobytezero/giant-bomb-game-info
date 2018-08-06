@@ -1,179 +1,137 @@
-const { registerBlockType, InspectorControls, BlockControls } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { withAPIData, PanelBody, CheckboxControl, SelectControl } = wp.components;
-const { Component } = wp.element;
+const { registerBlockType } = wp.blocks;
+const { InspectorControls } = wp.editor;
+const { PanelBody, SelectControl } = wp.components;
+const { Component, Fragment } = wp.element;
+const { compose } = wp.compose;
+const { withSelect } = wp.data;
 
-import * as GBGICore from '../../js/gbgi_core.js';
+import { wrapApiRequest, META_KEY } from '../../js/core';
 
 class Edit extends Component {
 
     constructor(props) {
+
         super(...arguments);
 
         this.props = props;
 
         this.state = {
-            searchResults: [],
-            searchTerm: "",
-            isSearching: false
+            hasTemplateList: false,
+            templateList: null,
+
+            gameInfoObj: null
         }
 
-        this.toolbarSettings = [{
-            icon: 'trash',
-            title: 'Remove',
-            onClick: () => { this.onRemoveClicked() }
-        }]
-
-    }
-
-    onSearchTermChanged(e) {
-        this.setState({searchTerm: e.target.value});
-    }
-
-    onSearchClick(e) {
-
-        this.setState({
-            isSearching: true
-        });
-
-        GBGICore.searchForGame(this.props.apiKey.data, this.state.searchTerm)
-            .then((apiResult) =>{
-
-                let results = apiResult.results.map((obj) => {
-                    let dataObj = GBGICore.apiResultToDataObj(obj);
-                    return {
-                        source: dataObj,
-                        display: dataObj.title + ' (' + dataObj.platforms.join(', ') + ')'  
-                    };      
-                });
-
-                this.setState({
-                    searchResults: results,
-                    isSearching: false
-                });
-            
-            });
-
-    }
-
-    onSearchResultClicked(resultObj) {
-
-        let json = JSON.stringify(resultObj)
-
-        this.props.setAttributes({ 
-            gameInfo: json,
-            gameInfoJson: json
-        });
-
-        this.setState({
-            searchResults: [],
-            searchTerm: ''
-        });
-    }
-
-    onRemoveClicked() {
-        this.props.setAttributes({ 
-            gameInfo: '',
-            gameInfoJson: ''
-        });
     }
 
     convertPlatformsToString(platformArray) {
         return platformArray.join(', ');
     }
 
+    // -----------------------------------------
+
+    _getTemplateList() {
+        return wrapApiRequest({
+            path: '/gbgi/v1/templates',
+            method: 'GET'
+        })
+    }
+
+    componentDidMount() {
+
+        this._getTemplateList()
+            .then((templateList) => {
+                this.setState({
+                    hasTemplateList: true,
+                    templateList: templateList
+                });
+            })
+
+    }
+
     render() {
 
-        const {attributes, className, setAttributes, apiKey, customTemplate, isSelected} = this.props;
+        const {
+            attributes, 
+            setAttributes, 
+            className
+        } = this.props;
 
-        let gameInfoObj = null;
+        return <Fragment>
 
-        if (attributes.gameInfo !== '') {
-            gameInfoObj = JSON.parse(attributes.gameInfo);
-        } 
+            <InspectorControls>
 
-        return [ 
+                <PanelBody title={'Custom Template'}>
 
-            isSelected && <BlockControls controls={this.toolbarSettings}/>,
+                    {(!this.state.hasTemplateList && <p>Loading Templates...</p>)}
 
-            isSelected && (<InspectorControls>
-                <PanelBody title={'Game Search'} className={className}>
-
-                    {(apiKey.isLoading && <p>Loading...</p>)}
-
-                    {(!apiKey.isLoading && 
-                        <div class="search-area">
-                            
-                            <input type="text" 
-                                value={this.state.searchTerm} 
-                                onChange={(e) => { this.onSearchTermChanged(e) } } />
-
-                            <button 
-                                class="button button-primary" 
-                                onClick={(e) => { this.onSearchClick(e); } }>Search</button>
-
-                        </div>
-                    )}
-                    
-                    {/* Only show the hr if there are search results */}
-                    {(this.state.searchResults.length > 0 || this.state.isSearching) && <hr/>}
-
-                    {(this.state.isSearching && <p class="searching">Searching...</p>)}
-
-                    <ul class="results">
-                        {this.state.searchResults.map((result, index) => (
-                            <li><a onClick={() => this.onSearchResultClicked(result.source)}>
-                                {result.display}
-                            </a></li>
-                        ))}
-                    </ul>
-
-                </PanelBody>
-
-                <PanelBody title={'Rendering'}>
-                    <CheckboxControl 
-                        label={'Disable Block Rendering'}
-                        checked={attributes.disableRender} 
-                        onChange={(val) => setAttributes({disableRender: val})} 
-                    />
-                    {(customTemplate.isLoading && <p>Loading...</p>)}
-                    {(!customTemplate.isLoading &&
-                    <SelectControl
-                        label={'Custom Template'}
-                        value={attributes.customTemplate}
-                        options={customTemplate.data.map((t) => {
-                            return {label: t.name, value:t.path}
-                        })}
-                        onChange={(val) => setAttributes({customTemplate: val})}
-                    />
+                    {(this.state.hasTemplateList &&
+                        <SelectControl
+                            label={'Custom Template'}
+                            value={attributes.customTemplate}
+                            options={this.state.templateList.map((t) => {
+                                return {label: t.name, value:t.value}
+                            })}
+                            onChange={(val) => setAttributes({customTemplate: val})}
+                        />
                     )}
 
                 </PanelBody>
-
-
-            </InspectorControls>),
+                
+            </InspectorControls>
+            
 
             <div class="editor" className={className + ' editor'}>
 
-                {gameInfoObj == null && <div class="components-placeholder">
+                {this.props.gameInfoAsObject === null && <div class="components-placeholder">
                     <h3 class="components-placeholder__label">No Game Selected.</h3>
                 </div>
                 }
 
-                {gameInfoObj != null && <div class="default-block">
-                    <img class="image" src={gameInfoObj.imageUrl}/>
-                    <h3 class="title">{gameInfoObj.title}</h3>
-                    <p class="platforms">{this.convertPlatformsToString(gameInfoObj.platforms)}</p>
+                {this.props.gameInfoAsObject !== null && <div class="default-block">
+                    <img class="image" src={this.props.gameInfoAsObject.imageUrl}/>
+                    <h3 class="title">{this.props.gameInfoAsObject.title}</h3>
+                    <p class="platforms">{this.convertPlatformsToString(this.props.gameInfoAsObject.platforms)}</p>
                 </div>}
 
             </div>
-        ]
 
+        </Fragment>
 
     }
 
-
-
 }
+// --------------------------------------------------------------
+// --------------------------------------------------------------
+// --------------------------------------------------------------
+
+const applyWithSelect = withSelect((select) => {
+
+    let parseGameInfoMeta = () => {
+
+        let gameInfoObj = null;
+        
+        let meta = select('core/editor').getEditedPostAttribute('meta');
+        let gameInfoJson = meta[META_KEY];
+
+        if (gameInfoJson !== ""){
+            gameInfoObj = JSON.parse(gameInfoJson);
+        }
+
+        return gameInfoObj;
+
+    };
+
+    return {
+        gameInfoAsObject: parseGameInfoMeta()
+    }
+
+});
+
+
+// --------------------------------------------------------------
+// --------------------------------------------------------------
+// --------------------------------------------------------------
 
 registerBlockType('gbgi/gbgi-block', {
     title: 'GBGI Game Info',
@@ -183,15 +141,7 @@ registerBlockType('gbgi/gbgi-block', {
         gameInfo: {
             type: 'string',
             source: 'meta',
-            meta: 'gbgi-gameinfo'
-        },
-        gameInfoJson: {
-            type: 'string',
-            default: ''
-        },
-        disableRender: {
-            type: 'boolean',
-            default: false
+            meta: META_KEY
         },
         customTemplate: {
             type: 'string',
@@ -199,12 +149,7 @@ registerBlockType('gbgi/gbgi-block', {
         }
     },
 
-    edit: withAPIData(() => {
-        return {
-            apiKey: '/gbgi/v1/apiKey',
-            customTemplate: '/gbgi/v1/templates'
-        }
-    })(Edit),
+    edit: compose([applyWithSelect])(Edit),
 
     save() {
         return null;

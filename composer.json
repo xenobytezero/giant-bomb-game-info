@@ -1,0 +1,18 @@
+{
+    "name": "xenobytezero/giant-bomb-game-info",
+    "type": "library",
+
+    "repositories": [ 
+        { 
+            "type": "path", 
+            "url": "./../widget-support",
+            "options": {
+                "symlink": true
+            }
+        } 
+    ], 
+
+    "require": {
+        "xenobytezero/widget-support": "@dev"
+    }
+}

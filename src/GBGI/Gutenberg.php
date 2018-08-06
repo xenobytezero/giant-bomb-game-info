@@ -1,7 +1,6 @@
 <?php 
 
 namespace GBGI;
-require_gbgi_autoloader();
 
 // -----------------------------------------------------------------
 
@@ -13,6 +12,28 @@ class Gutenberg {
 
     public static function register() {
 
+        // Plugin
+        wp_register_script(
+            'gbgi-plugin',
+            Common::plugin_url('/dist/js/plugin.js'),
+            [
+                'wp-plugins',
+                'wp-components',
+                'wp-edit-post',
+                'wp-i18n',
+                'wp-data',
+                'wp-compose',
+                'wp-api-request'
+            ]
+        );
+
+        // Plugin Sidebar CSS
+        wp_register_style(
+            'gbgi-plugin-editor-sidebar',
+            Common::plugin_url('dist/css/plugin-editor-sidebar.css')
+        );
+
+        // Gutenberg Block
         wp_register_script(
             'gbgi-gutenberg-block',
             Common::plugin_url('dist/blocks/gbgi-block/block.js'),
@@ -23,32 +44,31 @@ class Gutenberg {
             ]
         );
 
+        // Block Style
         wp_register_style(
-            'gbgi-gutenberg-style',
+            'gbgi-gutenberg-block-style',
             Common::plugin_url('dist/blocks/gbgi-block/style.css')
         );
 
-        wp_register_style(
-            'gbgi-gutenberg-editor-style',
-            Common::plugin_url('dist/blocks/gbgi-block/style.css')
-        );
-
+        // Register Gutenberg Block
         register_block_type( 
             'gbgi/gbgi-block', [
-                'style' => 'gbgi-gutenberg-style',
+                'style' => 'gbgi-gutenberg-block-style',
                 'editor_script' => 'gbgi-gutenberg-block',
-                'editor_style' => 'gbgi-gutenberg-editor-style',
                 'render_callback' => '\GBGI\Gutenberg::render_block'
             ]
         );
 
     }
 
+    public static function enqueue() {
+        wp_enqueue_script('gbgi-plugin');
+        wp_enqueue_style('gbgi-plugin-editor-sidebar');
+    }
+
     public static function render_block($attrs){
 
-        $disable_render = array_key_exists('disableRender', $attrs) ?
-            $attrs['disableRender'] :
-            false;
+        var_dump($attrs);
 
         $game_info_json = array_key_exists('gameInfoJson', $attrs) ? 
             $attrs['gameInfoJson'] :
@@ -58,15 +78,9 @@ class Gutenberg {
             $attrs['customTemplate'] :
             "";
 
-            
-        if ($disable_render){
-            return  "<!-- gbgi/gbgi-block - Block Render Disabled -->";
-        }
-
         if ($game_info_json == ''){
             return  "<!-- gbgi/gbgi-block - No Game Data -->";
         } 
-
 
         $decoded_json = json_decode($game_info_json, true);
 

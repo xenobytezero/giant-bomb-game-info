@@ -21,7 +21,8 @@ module.exports = {
     modules: {
         autoRequire: {
             'blocks/gbgi-block/block.js': ['blocks/gbgi-block/block.js'],
-            'js/options.js': ['js/options.js']
+            'js/options.js': ['js/options.js'],
+            'js/plugin.js': ['js/plugin.js']
         }
     },
 
@@ -30,7 +31,7 @@ module.exports = {
     conventions: {
         ignored: [
             // don't compile these things, but watch them
-            //'js/**/*'
+            'node_modules'
         ]
     },
 
@@ -40,7 +41,8 @@ module.exports = {
         public: './dist',
         watched: [
             'js',
-            'blocks'
+            'blocks',
+            'sass'
         ]
     },
 
@@ -50,13 +52,16 @@ module.exports = {
         javascripts: {
             entryPoints: {
                 'blocks/gbgi-block/block.js': 'blocks/gbgi-block/block.js',
-                'js/options.js': 'js/options.js'
+                'js/options.js': 'js/options.js',
+                'js/plugin.js': 'js/plugin.js'
             }
         },
         stylesheets: {
             joinTo: {
                 'blocks/gbgi-block/style.css': 'blocks/gbgi-block/style.scss',
-                'blocks/gbgi-block/style-editor.css': 'blocks/gbgi-block/style-editor.scss'       
+                'blocks/gbgi-block/style-editor.css': 'blocks/gbgi-block/style-editor.scss',
+
+                'css/plugin-editor-sidebar.css': 'sass/plugin-editor-sidebar.scss'
             }
         }
     }

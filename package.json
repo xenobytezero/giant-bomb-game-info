@@ -1,6 +1,6 @@
 {
-  "name": "giant-bomb-game-info-widget",
-  "version": "1.0.0",
+  "name": "giant-bomb-game-info",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,22 +9,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xenobytezero/giant-bomb-game-info-widget.git"
+    "url": "git+https://github.com/xenobytezero/giant-bomb-game-info.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xenobytezero/giant-bomb-game-info-widget/issues"
+    "url": "https://github.com/xenobytezero/giant-bomb-game-info/issues"
   },
-  "homepage": "https://github.com/xenobytezero/giant-bomb-game-info-widget#readme",
+  "homepage": "https://github.com/xenobytezero/giant-bomb-game-info#readme",
   "devDependencies": {},
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
+    "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
+    "@fortawesome/react-fontawesome": "^0.1.0-11",
     "babel-brunch": "^6.1.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "fetch-jsonp": "^1.1.3",
     "node-sass-import-once": "^1.2.0",
     "qs": "^6.5.2",
+    "react": "^16.4.2",
     "sass-brunch": "file:.yalc/sass-brunch"
   }
 }
