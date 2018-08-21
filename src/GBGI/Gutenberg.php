@@ -20,7 +20,7 @@ class Gutenberg {
                 'wp-plugins',
                 'wp-components',
                 'wp-edit-post',
-                'wp-i18n',
+                'wp-element',
                 'wp-data',
                 'wp-compose',
                 'wp-api-request'
@@ -67,9 +67,7 @@ class Gutenberg {
     }
 
     public static function render_block($attrs){
-
-        var_dump($attrs);
-
+        
         $game_info_json = array_key_exists('gameInfoJson', $attrs) ? 
             $attrs['gameInfoJson'] :
             "";

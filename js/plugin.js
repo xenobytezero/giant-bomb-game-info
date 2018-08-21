@@ -1,6 +1,6 @@
 const { registerPlugin } = wp.plugins;
 const { PanelBody, TextControl } = wp.components;
-const { PluginSidebar } = wp.editPost;
+const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editPost;
 const { Component, Fragment } = wp.element;
 const { withSelect, withDispatch } = wp.data;
 const { compose } = wp.compose;
@@ -185,115 +185,122 @@ class GBGISidebar extends Component {
     render() {
 
 
-        return <PluginSidebar name="gbgi-sidebar"><div class="gbgi-sidebar">
+        return <Fragment>
 
-            {!this.state.attemptedAPIKey && <h3 class="pholder">Loading...</h3>}
-    
-            {this.state.attemptedAPIKey && <Fragment>
-                
-                <PanelBody
-                    title={"API Key - " + (this.state.hasApiKey ? 'OK' : 'Missing' )}
-                    opened={this.state.authPanelOpen}
-                    onToggle={() => { this.setState({authPanelOpen: !this.state.authPanelOpen})}}
-                >
+                <PluginSidebarMoreMenuItem target="gbgi-sidebar">
+                    Giant Bomb Game Info
+                </PluginSidebarMoreMenuItem>
 
-                    {this.state.apiKey === null && <Fragment>
+                <PluginSidebar name="gbgi-sidebar"><div class="gbgi-sidebar">
 
-                        <p>This plugin requires a Giant Bomb account and an API Key to function to work</p>
-                        <p>If you already have an account, get your API key <a href="https://www.giantbomb.com/api/">from here</a></p>
+                {!this.state.attemptedAPIKey && <h3 class="pholder">Loading...</h3>}
+        
+                {this.state.attemptedAPIKey && <Fragment>
                     
-                        <TextControl
-                            value={this.tempApiKey}
-                            onChange={(val) => {this.setState({tempApiKey: val}) }}
-                        />
+                    <PanelBody
+                        title={"API Key - " + (this.state.hasApiKey ? 'OK' : 'Missing' )}
+                        opened={this.state.authPanelOpen}
+                        onToggle={() => { this.setState({authPanelOpen: !this.state.authPanelOpen})}}
+                    >
 
-                        <button
-                            class="button button-primary fullwidth"
-                            onClick={() => { this._onSetApiKeyClicked(this.state.tempApiKey) ; }}
-                        >Set API Key</button>
+                        {this.state.apiKey === null && <Fragment>
 
-                    </Fragment>}
-
-                    {this.state.apiKey !== null && <Fragment>
-                        <p>API Key set, your good to go!</p>,
-                        <button
-                            class="button button-primary fullwidth"
-                            onClick={() => { this._revokeAPIKey() ; }}
-                        >Revoke API Key</button>
-                    </Fragment>}
-
-                </PanelBody>
-
-
-                <PanelBody
-                    title={'Current Game' + (this.state.currentGame === null ? '' : ' - ' + this.state.currentGame.title)}
-                >
-                    
-                    {this.state.currentGame === null && 
-                        <h3 class="pholder">No Game Selected</h3>
-                    }
-
-                    {this.state.currentGame !== null && 
-                        <div class="current-game">
-                            <img class="image" src={this.state.currentGame.imageUrl}/>
-                            <p class="platforms">{this._convertPlatformsToString(this.state.currentGame.platforms)}</p>
-                            <button
-                                class="button button-primary fullwidth"
-                                onClick={() => { this._clearCurrentGame(); }}
-                            >Clear Game</button>
-                        </div>
-                    }
-
-                </PanelBody>
-
-                <PanelBody
-                    title={'Game Search'}
-                >
-
-                    <div class="search-area">
+                            <p>This plugin requires a Giant Bomb account and an API Key to function to work</p>
+                            <p>If you already have an account, get your API key <a href="https://www.giantbomb.com/api/">from here</a></p>
                         
-                        <div class="controls">
-
-                            <input type="text"
-                                class='search-input'
-                                value={this.state.searchTerm}
-                                onChange={(e) => { this.setState({searchTerm: e.target.value}); }}
-                                onKeyPress={(e) => { this._onSearchBoxKeyPress(e); }}
+                            <TextControl
+                                value={this.tempApiKey}
+                                onChange={(val) => {this.setState({tempApiKey: val}) }}
                             />
 
-                            <button 
-                                class="button button-primary" 
-                                onClick={(e) => { this._searchForGame(this.state.searchTerm); } }
-                                onKeyPress={this._onSearchBoxKeyPress}
-                            ><FontAwesomeIcon icon={faSearch}/></button>
-
-                        </div>
-
-                        {this.state.isSearching && <FontAwesomeIcon className={'loading-spinner'} icon={faCog} size="2x" spin/>}
-
-                        {this.state.searchResults !== null && this.state.searchResults.length === 0 && <h3 class="pholder">No Results</h3>}
-
-                        {this.state.searchResults !== null && this.state.searchResults.length !== 0 && <Fragment>
-                            
-                            <hr/>
-
-                            <ul class="results">
-                                {this.state.searchResults.map((result, index) => (
-                                    <li><a onClick={() => this._onSearchResultClicked(result.source)}>
-                                        {result.display}
-                                    </a></li>
-                                ))}
-                            </ul>
+                            <button
+                                class="button button-primary fullwidth"
+                                onClick={() => { this._onSetApiKeyClicked(this.state.tempApiKey) ; }}
+                            >Set API Key</button>
 
                         </Fragment>}
 
-                    </div>
+                        {this.state.apiKey !== null && <Fragment>
+                            <p>API Key set, your good to go!</p>,
+                            <button
+                                class="button button-primary fullwidth"
+                                onClick={() => { this._revokeAPIKey() ; }}
+                            >Revoke API Key</button>
+                        </Fragment>}
 
-                </PanelBody>
+                    </PanelBody>
 
-            </Fragment>}
 
-        </div></PluginSidebar>
+                    <PanelBody
+                        title={'Current Game' + (this.state.currentGame === null ? '' : ' - ' + this.state.currentGame.title)}
+                    >
+                        
+                        {this.state.currentGame === null && 
+                            <h3 class="pholder">No Game Selected</h3>
+                        }
+
+                        {this.state.currentGame !== null && 
+                            <div class="current-game">
+                                <img class="image" src={this.state.currentGame.imageUrl}/>
+                                <p class="platforms">{this._convertPlatformsToString(this.state.currentGame.platforms)}</p>
+                                <button
+                                    class="button button-primary fullwidth"
+                                    onClick={() => { this._clearCurrentGame(); }}
+                                >Clear Game</button>
+                            </div>
+                        }
+
+                    </PanelBody>
+
+                    <PanelBody
+                        title={'Game Search'}
+                    >
+
+                        <div class="search-area">
+                            
+                            <div class="controls">
+
+                                <input type="text"
+                                    class='search-input'
+                                    value={this.state.searchTerm}
+                                    onChange={(e) => { this.setState({searchTerm: e.target.value}); }}
+                                    onKeyPress={(e) => { this._onSearchBoxKeyPress(e); }}
+                                />
+
+                                <button 
+                                    class="button button-primary" 
+                                    onClick={(e) => { this._searchForGame(this.state.searchTerm); } }
+                                    onKeyPress={this._onSearchBoxKeyPress}
+                                ><FontAwesomeIcon icon={faSearch}/></button>
+
+                            </div>
+
+                            {this.state.isSearching && <FontAwesomeIcon className={'loading-spinner'} icon={faCog} size="2x" spin/>}
+
+                            {this.state.searchResults !== null && this.state.searchResults.length === 0 && <h3 class="pholder">No Results</h3>}
+
+                            {this.state.searchResults !== null && this.state.searchResults.length !== 0 && <Fragment>
+                                
+                                <hr/>
+
+                                <ul class="results">
+                                    {this.state.searchResults.map((result, index) => (
+                                        <li><a onClick={() => this._onSearchResultClicked(result.source)}>
+                                            {result.display}
+                                        </a></li>
+                                    ))}
+                                </ul>
+
+                            </Fragment>}
+
+                        </div>
+
+                    </PanelBody>
+
+                </Fragment>}
+
+            </div></PluginSidebar>
+        </Fragment>
 
 
     }
