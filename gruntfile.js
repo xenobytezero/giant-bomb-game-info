@@ -45,6 +45,12 @@ module.exports = function(grunt) {
                     // Templates
                     {src: ['templates/**/*.twig'], dest: deployDest},
 
+                    // Gutenberg
+
+                    // gbgi/gbgi-block
+                    {src: ['dist/blocks/gbgi-block/**/*.@(js|css)'], dest: deployDest},
+
+
                     // Other
                     {
                         src: [
@@ -81,12 +87,13 @@ module.exports = function(grunt) {
 
     });
 
+    grunt.registerTask('readpkg', 'Read in the package.json file', function() {
+        grunt.config.set('pkg', grunt.file.readJSON('./package.json'));
+    });
+
     // Default task(s).
-    grunt.registerTask('release', [
-        'exec:brunchBuild', 
-        'bump', 
-        'copy:deploy', 
-        'replace:deployedVersionTag'
-    ]);
+    grunt.registerTask('build', ['exec:brunchBuild']);
+    grunt.registerTask('dryRelease', ['build', 'copy:deploy', 'replace:deployedVersionTag'])
+    grunt.registerTask('release', ['bump', 'readpkg', 'dryRelease']);
   
   };

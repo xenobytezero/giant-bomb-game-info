@@ -4,16 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a62c70db1d46996f3d687384d3ca06cc",
+    "content-hash": "9f35337c7ad3eb4a34dd4b3e8e6ea2f2",
     "packages": [
         {
             "name": "xenobytezero/widget-support",
-            "version": "9999999-dev",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xenobytezero/widget-support.git",
+                "reference": "a36e68c7fe535c06ff3834ae19de7d2a5dc542f9"
+            },
             "dist": {
-                "type": "path",
-                "url": "./../widget-support",
+                "type": "zip",
+                "url": "https://api.github.com/repos/xenobytezero/widget-support/zipball/a36e68c7fe535c06ff3834ae19de7d2a5dc542f9",
                 "reference": "a36e68c7fe535c06ff3834ae19de7d2a5dc542f9",
-                "shasum": null
+                "shasum": ""
             },
             "type": "library",
             "autoload": {
@@ -21,17 +26,17 @@
                     "WidgetSupport\\": "src/"
                 }
             },
-            "transport-options": {
-                "symlink": true
-            }
+            "support": {
+                "source": "https://github.com/xenobytezero/widget-support/tree/1.0.0",
+                "issues": "https://github.com/xenobytezero/widget-support/issues"
+            },
+            "time": "2018-07-29T18:59:43+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "xenobytezero/widget-support": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
