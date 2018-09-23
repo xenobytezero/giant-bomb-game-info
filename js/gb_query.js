@@ -31,7 +31,8 @@ class GBQuery {
             title: apiResult.name,
             imageUrl: apiResult.image.small_url,
             platforms: platforms,
-            description: apiResult.deck
+            description: apiResult.deck,
+            link: apiResult.site_detail_url
         }
     
     }

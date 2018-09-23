@@ -243,6 +243,7 @@ class GBGISidebar extends Component {
                             <div class="current-game">
                                 <img class="image" src={this.state.currentGame.imageUrl}/>
                                 <p class="platforms">{this._convertPlatformsToString(this.state.currentGame.platforms)}</p>
+                                <p><a href={this.state.currentGame.link}>Visit GiantBomb Page</a></p>
                                 <button
                                     class="button button-primary fullwidth"
                                     onClick={() => { this._clearCurrentGame(); }}
