@@ -25,8 +25,12 @@ class GBQuery {
     
     static apiResultToDataObj(apiResult) {
     
-        let platforms = apiResult.platforms.map(p => p.name);
-    
+        let platforms = [];
+        
+        if (apiResult.platforms && apiResult.platforms.length > 0){
+            platforms = apiResult.platforms.map(p => p.name);
+        }
+        
         return {
             title: apiResult.name,
             imageUrl: apiResult.image.small_url,
