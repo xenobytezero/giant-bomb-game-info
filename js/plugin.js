@@ -4,13 +4,15 @@ const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editPost;
 const { Component, Fragment } = wp.element;
 const { withSelect, withDispatch } = wp.data;
 const { compose } = wp.compose;
-const apiRequest = wp.apiRequest;
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGamepad, faCog, faSearch } from '@fortawesome/free-solid-svg-icons'
-
-import { GBQuery } from 'js/gb_query.js';
+import { GBQuery } from './gb_query';
 import { META_KEY, wrapApiRequest } from './core';
+
+// --------------------------
+
+import './plugin.scss';
+
+// --------------------------
 
 class GBGISidebar extends Component {
 
@@ -272,7 +274,7 @@ class GBGISidebar extends Component {
                                     class="button button-primary" 
                                     onClick={(e) => { this._searchForGame(this.state.searchTerm); } }
                                     onKeyPress={this._onSearchBoxKeyPress}
-                                ><FontAwesomeIcon icon={faSearch}/></button>
+                                >Search</button>
 
                             </div>
 
@@ -339,7 +341,7 @@ const applyWithDispatch = withDispatch( ( dispatch, { meta } ) => {
 // --------------------------------------------------------------
 
 registerPlugin('gbgi', {
-    icon: <FontAwesomeIcon icon={faGamepad}/>,
+    icon: <i class="gbgi-plugin-toolbar-button"></i>,
     render: compose([
         applyWithSelect,
         applyWithDispatch

@@ -15,7 +15,7 @@ class Gutenberg {
         // Plugin
         wp_register_script(
             'gbgi-plugin',
-            Common::plugin_url('/dist/js/plugin.js'),
+            Common::plugin_url('/dist/plugin/plugin.build.js'),
             [
                 'wp-plugins',
                 'wp-components',
@@ -30,13 +30,13 @@ class Gutenberg {
         // Plugin Sidebar CSS
         wp_register_style(
             'gbgi-plugin-editor-sidebar',
-            Common::plugin_url('dist/css/plugin-editor-sidebar.css')
+            Common::plugin_url('dist/plugin/plugin.css')
         );
 
         // Gutenberg Block
         wp_register_script(
             'gbgi-gutenberg-block',
-            Common::plugin_url('dist/blocks/gbgi-block/block.js'),
+            Common::plugin_url('dist/blocks/gbgi-block/block.build.js'),
             [
                 'wp-blocks', 
                 'wp-element',
