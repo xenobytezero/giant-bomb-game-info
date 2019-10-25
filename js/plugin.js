@@ -278,7 +278,7 @@ class GBGISidebar extends Component {
 
                             </div>
 
-                            {this.state.isSearching && <FontAwesomeIcon className={'loading-spinner'} icon={faCog} size="2x" spin/>}
+                            {this.state.isSearching && <i className={'loading-spinner'}/>}
 
                             {this.state.searchResults !== null && this.state.searchResults.length === 0 && <h3 class="pholder">No Results</h3>}
 
@@ -288,7 +288,7 @@ class GBGISidebar extends Component {
 
                                 <ul class="results">
                                     {this.state.searchResults.map((result, index) => (
-                                        <li><a onClick={() => this._onSearchResultClicked(result.source)}>
+                                        <li key={index}><a onClick={() => this._onSearchResultClicked(result.source)}>
                                             {result.display}
                                         </a></li>
                                     ))}
@@ -330,7 +330,7 @@ const applyWithDispatch = withDispatch( ( dispatch, { meta } ) => {
 
 	return {
 		updateMeta( newMeta ) {
-			editPost( { meta: Object.assign(meta, newMeta) } ); // Important: Old and new meta need to be merged in a non-mutating way!
+			editPost( { meta: newMeta } );
         }
     };
     

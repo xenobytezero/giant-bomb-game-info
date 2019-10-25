@@ -28,7 +28,7 @@ class GBQuery {
         let platforms = [];
         
         if (apiResult.platforms && apiResult.platforms.length > 0){
-            platforms = apiResult.platforms.map(p => p.name);
+            platforms = apiResult.platforms.map(p => p.abbreviation);
         }
         
         return {

@@ -40,7 +40,8 @@ class Gutenberg {
             [
                 'wp-blocks', 
                 'wp-element',
-                'wp-components'
+                'wp-components',
+                'wp-editor',
             ]
         );
 
