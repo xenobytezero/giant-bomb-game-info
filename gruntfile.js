@@ -17,8 +17,8 @@ module.exports = function(grunt) {
             options: {
             },
 
-            brunchBuild: {
-                command: 'brunch b'
+            webpackBuild: {
+                command: 'npm run build'
             },
             
         },
@@ -92,7 +92,7 @@ module.exports = function(grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('build', ['exec:brunchBuild']);
+    grunt.registerTask('build', ['exec:webpackBuild']);
     grunt.registerTask('dryRelease', ['build', 'copy:deploy', 'replace:deployedVersionTag'])
     grunt.registerTask('release', ['bump', 'readpkg', 'dryRelease']);
   
