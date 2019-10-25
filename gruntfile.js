@@ -36,20 +36,11 @@ module.exports = function(grunt) {
                     {src: ['composer.json', 'composer.lock'], dest: deployDest},
                     {src: ['vendor/**/*'], dest: deployDest},
 
-                    // JS
-                    {src: ['dist/js/**/*.js'], dest: deployDest},
-
-                    // CSS
-                    {src: ['dist/css/**/*.css'], dest: deployDest},
+                    // JS, CSS, Assets
+                    {src: ['dist/**/*'], dest: deployDest},
 
                     // Templates
                     {src: ['templates/**/*.twig'], dest: deployDest},
-
-                    // Gutenberg
-
-                    // gbgi/gbgi-block
-                    {src: ['dist/blocks/gbgi-block/**/*.@(js|css)'], dest: deployDest},
-
 
                     // Other
                     {
